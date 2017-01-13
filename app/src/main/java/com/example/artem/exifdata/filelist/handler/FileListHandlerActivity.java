@@ -35,10 +35,12 @@ public class FileListHandlerActivity extends Activity {
 
         initDropboxAPI();
 
+/*
         if(!TextUtils.isEmpty(ExifReaderApplication.getDropBoxAuthToken())) {
             sendFiles(filelist);
             finish();
         }
+*/
     }
 
     @Override

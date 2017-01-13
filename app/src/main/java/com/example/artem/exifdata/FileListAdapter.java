@@ -7,11 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.artem.exifdata.models.FileData;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -32,8 +28,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     public FileListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.recycler_view_item, parent, false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -53,11 +48,6 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     public boolean addAll(Collection<String> items) {
         boolean added = dataSource.addAll(items);
         notifyDataSetChanged();
-        return added;
-    }
-
-    private boolean addItemIntern(String item) {
-        boolean added = dataSource.add(item);
         return added;
     }
 
@@ -86,7 +76,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
                 e.printStackTrace();
                 return;
             }
-            tvFileName.setText(item);
+            tvFileName.setText(new File(item).getName());
             if(isGeoTagPresent) {
                 tvLatitude.setText(String.valueOf(coord[0]));
                 tvLongitude.setText(String.valueOf(coord[1]));
