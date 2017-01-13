@@ -34,6 +34,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile files('D:/Projects/exif-reader/lib/dropbox-android-sdk-1.6.3.jar')
-    compile files('D:/Projects/exif-reader/lib/json_simple-1.1.jar')
+    compile files('../lib/dropbox-android-sdk-1.6.3.jar')
+    compile files('../lib/json_simple-1.1.jar')
 }
