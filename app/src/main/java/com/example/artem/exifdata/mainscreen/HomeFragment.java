@@ -15,9 +15,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.artem.exifdata.R;
+import com.example.artem.exifdata.databinding.FragmentMainBinding;
 import com.example.artem.exifdata.filelist.FileListAdapter;
 import com.example.artem.exifdata.filelist.FileListContract;
-import com.example.artem.exifdata.instantupload.UploadPicture;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,9 +29,7 @@ import butterknife.ButterKnife;
  * Created by Artem_Lazurenko on 26.01.2017.
  */
 
-public class HomeFragment extends Fragment implements FileListContract {
-    @BindView(R.id.clContainer)
-    CoordinatorLayout coordinatorLayout;
+public class HomeFragment extends Fragment implements FileListContract.FileListView {
     @BindView(R.id.etCurrentLatitude)
     EditText etCurrentLatitude;
     @BindView(R.id.etCurrentLongitude)
@@ -41,15 +42,17 @@ public class HomeFragment extends Fragment implements FileListContract {
     View btnHandle;
 
     private FileListAdapter adapter;
-    private ViewDataBinding binding;
+    private FragmentMainBinding binding;
     private Location location;
+    private FileListContract.Presenter presenter;
+    private List<String> fileNames = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
 
-        ButterKnife.bind(binding.getRoot());
+        ButterKnife.bind(this, binding.getRoot());
 
         location = new Location("Fictive");
         location.setLatitude(49.233D);
@@ -63,7 +66,7 @@ public class HomeFragment extends Fragment implements FileListContract {
         btnHandle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleFileList();
+                presenter.handleFileList(fileNames);
             }
         });
 
@@ -71,19 +74,22 @@ public class HomeFragment extends Fragment implements FileListContract {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override
     public void setLocation(Location location) {
         binding.setLocation(location);
     }
 
+    @Override
     public void setRadius(double radius) {
         binding.setRadius(radius);
     }
 
-    private void handleFileList() {
-        new UploadPicture(this, mDBApi, "", list).execute();
+    @Override
+    public void setPresenter(FileListContract.Presenter fileListPresenter) {
+        this.presenter = fileListPresenter;
     }
 }

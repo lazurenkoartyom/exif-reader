@@ -1,6 +1,7 @@
 package com.example.artem.exifdata;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.artem.exifdata.util.Constants;
@@ -11,10 +12,16 @@ import com.example.artem.exifdata.util.Constants;
 
 public class ExifReaderApplication extends Application {
     private static String dropBoxAuthToken = "";
+    private static Context applicationContext;
+
+    public static Context getAppContext() {
+        return applicationContext;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        applicationContext = getApplicationContext();
         readPreferences();
     }
 

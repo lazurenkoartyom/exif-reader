@@ -7,18 +7,11 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.session.AppKeyPair;
-import com.example.artem.exifdata.ExifReaderApplication;
-import com.example.artem.exifdata.MainActivity;
-import com.example.artem.exifdata.util.Constants;
+import com.example.artem.exifdata.dropbox.DBAPI;
+import com.example.artem.exifdata.dropbox.DBUploadFileListHandler;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -71,6 +64,7 @@ public class ImageInstantUploadService extends IntentService {
             String fileName = readFromMediaStore(getApplicationContext(),
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             Log.d(TAG, "detected picture" + fileName);
+/*
             String dbAccessToken = ExifReaderApplication.getDropBoxAuthToken();
             AppKeyPair appKeys = new AppKeyPair(Constants.APP_KEY, Constants.APP_SECRET);
             AndroidAuthSession session = new AndroidAuthSession(appKeys);
@@ -80,7 +74,8 @@ public class ImageInstantUploadService extends IntentService {
             } else {
                 mDBApi.getSession().setOAuth2AccessToken(dbAccessToken);
             }
-            new UploadPicture(getBaseContext(), mDBApi, "", new ArrayList<>(Arrays.asList(new String[]{fileName}))).execute();
+*/
+            new DBUploadFileListHandler(getBaseContext(), DBAPI.getInstance(), "").execute();
 
 
 /*

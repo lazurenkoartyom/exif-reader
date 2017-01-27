@@ -1,11 +1,4 @@
-package com.example.artem.exifdata.instantupload;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+package com.example.artem.exifdata.dropbox;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -20,14 +13,21 @@ import com.dropbox.client2.exception.DropboxParseException;
 import com.dropbox.client2.exception.DropboxPartialFileException;
 import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
+import com.example.artem.exifdata.filelist.handler.FilesHandler;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * Here we show uploading a file in a background thread, trying to show
- * typical exception handling and flow of control for an app that uploads a
- * file from Dropbox.
+ * Created by Artem_Lazurenko on 27.01.2017.
  */
-public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
-    public static final String TAG = UploadPicture.class.getCanonicalName();
+
+public class DBUploadFileListHandler extends AsyncTask<String, Long, Boolean> implements FilesHandler {
+    public static final String TAG = DBUploadFileListHandler.class.getCanonicalName();
 
     private DropboxAPI<?> mApi;
     private String mPath;
@@ -39,18 +39,16 @@ public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
     private String mErrorMsg;
 
 
-    public UploadPicture(Context context, DropboxAPI<?> api, String dropboxPath,
-                         List<String> fileNames) {
+    public DBUploadFileListHandler(Context context, DropboxAPI<?> api, String dropboxPath) {
         // We set the context this way so we don't accidentally leak activities
         mContext = context.getApplicationContext();
 
         mApi = api;
         mPath = dropboxPath;
-        mFileNames = fileNames;
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
+    protected Boolean doInBackground(String... params) {
         boolean success = true;
         for (String filename : mFileNames) {
             success &= sendFile(filename);
@@ -129,5 +127,17 @@ public class UploadPicture extends AsyncTask<Void, Long, Boolean> {
     private void showToast(String msg) {
         Toast error = Toast.makeText(mContext, msg, Toast.LENGTH_LONG);
         error.show();
+    }
+
+    @Override
+    public void handleFileList(List<String> fileList) {
+        String[] filenames = new String[fileList.size()];
+        fileList.toArray(filenames);
+        execute(filenames);
+    }
+
+    @Override
+    public void handleFile(String fileName) {
+        execute(fileName);
     }
 }
