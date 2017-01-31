@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.annotations.NonNull;
 import com.example.artem.exifdata.R;
 
 import java.io.File;
@@ -53,9 +54,16 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         return added;
     }
 
-    public void clear() {
+    public void updateDataSource(@NonNull List<String> fileNames) {
+        if(fileNames.isEmpty() && dataSource.isEmpty()) {
+            return;
+        }
         dataSource.clear();
-        notifyDataSetChanged();
+        if(fileNames.isEmpty()) {
+            notifyDataSetChanged();
+        } else {
+            addAll(fileNames);
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

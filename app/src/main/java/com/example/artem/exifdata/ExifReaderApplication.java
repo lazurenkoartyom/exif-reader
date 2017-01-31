@@ -3,6 +3,8 @@ package com.example.artem.exifdata;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.IBinder;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.artem.exifdata.util.Constants;
 
@@ -38,5 +40,17 @@ public class ExifReaderApplication extends Application {
     private void readPreferences() {
         SharedPreferences pref = getSharedPreferences(getClass().getName(), MODE_PRIVATE);
         dropBoxAuthToken = pref.getString(Constants.KEY_DROPBOX_AUTH_TOKEN, "");
+    }
+
+    public static void hideSoftInput(IBinder appWindowToken, int inputMethodManagerFlags) {
+        int immFlags =
+                ((inputMethodManagerFlags == InputMethodManager.HIDE_NOT_ALWAYS)
+                        || (inputMethodManagerFlags == InputMethodManager.HIDE_IMPLICIT_ONLY)
+                        || (inputMethodManagerFlags == 0))
+                        ? inputMethodManagerFlags
+                        : 0;
+
+        ((InputMethodManager) getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(appWindowToken, immFlags);
     }
 }

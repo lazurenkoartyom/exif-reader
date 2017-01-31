@@ -10,10 +10,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.example.artem.exifdata.dropbox.DBAPI;
-import com.example.artem.exifdata.dropbox.DBUploadFileListHandler;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.example.artem.exifdata.filelist.handler.DBUploadFileListHandler;
 
 /**
  * Created by Artem_Lazurenko on 13.01.2017.
@@ -64,26 +61,7 @@ public class ImageInstantUploadService extends IntentService {
             String fileName = readFromMediaStore(getApplicationContext(),
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             Log.d(TAG, "detected picture" + fileName);
-/*
-            String dbAccessToken = ExifReaderApplication.getDropBoxAuthToken();
-            AppKeyPair appKeys = new AppKeyPair(Constants.APP_KEY, Constants.APP_SECRET);
-            AndroidAuthSession session = new AndroidAuthSession(appKeys);
-            DropboxAPI<AndroidAuthSession> mDBApi = new DropboxAPI<>(session);
-            if(TextUtils.isEmpty(dbAccessToken)) {
-                return;
-            } else {
-                mDBApi.getSession().setOAuth2AccessToken(dbAccessToken);
-            }
-*/
-            new DBUploadFileListHandler(getBaseContext(), DBAPI.getInstance(), "").execute();
-
-
-/*
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.setAction(MainActivity.SEND_FILE_INTENT);
-            intent.putStringArrayListExtra(Constants.KEY_FILELIST, new ArrayList<>(Arrays.asList(new String[]{fileName})));
-            sendBroadcast(new Intent(intent));
-*/
+            new DBUploadFileListHandler(getBaseContext(), DBAPI.getInstance(), "").execute(fileName);
         }
     }
 

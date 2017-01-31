@@ -1,6 +1,5 @@
 package com.example.artem.exifdata.dropbox;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.dropbox.client2.DropboxAPI;

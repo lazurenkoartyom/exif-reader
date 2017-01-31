@@ -2,11 +2,9 @@ package com.example.artem.exifdata.mainscreen;
 
 import android.app.Fragment;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.android.annotations.NonNull;
 import com.example.artem.exifdata.R;
 import com.example.artem.exifdata.databinding.FragmentMainBinding;
 import com.example.artem.exifdata.filelist.FileListAdapter;
@@ -43,9 +42,7 @@ public class HomeFragment extends Fragment implements FileListContract.FileListV
 
     private FileListAdapter adapter;
     private FragmentMainBinding binding;
-    private Location location;
     private FileListContract.Presenter presenter;
-    private List<String> fileNames = new ArrayList<>();
 
     @Nullable
     @Override
@@ -54,21 +51,10 @@ public class HomeFragment extends Fragment implements FileListContract.FileListV
 
         ButterKnife.bind(this, binding.getRoot());
 
-        location = new Location("Fictive");
-        location.setLatitude(49.233D);
-        location.setLongitude(28.468D);
-
         adapter = new FileListAdapter();
         rvResults.setAdapter(adapter);
         rvResults.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rvResults.setNestedScrollingEnabled(false);
-
-        btnHandle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.handleFileList(fileNames);
-            }
-        });
 
         return binding.getRoot();
     }
@@ -76,10 +62,11 @@ public class HomeFragment extends Fragment implements FileListContract.FileListV
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
     }
 
     @Override
-    public void setLocation(Location location) {
+    public void setLocation(@NonNull Location location) {
         binding.setLocation(location);
     }
 
@@ -91,5 +78,26 @@ public class HomeFragment extends Fragment implements FileListContract.FileListV
     @Override
     public void setPresenter(FileListContract.Presenter fileListPresenter) {
         this.presenter = fileListPresenter;
+    }
+
+    @Override
+    public void showList(final List<String> fileNames) {
+        if(fileNames.isEmpty()) {
+            btnHandle.setVisibility(View.GONE);
+        } else {
+            btnHandle.setVisibility(View.VISIBLE);
+            btnHandle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.handleFileList(fileNames);
+                }
+            });
+        }
+        adapter.updateDataSource(fileNames);
+    }
+
+    @Override
+    public String getRadius() {
+        return etRadius.getText() == null ? null : etRadius.getText().toString();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.artem.exifdata.dropbox;
+package com.example.artem.exifdata.filelist.handler;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -13,13 +13,10 @@ import com.dropbox.client2.exception.DropboxParseException;
 import com.dropbox.client2.exception.DropboxPartialFileException;
 import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
-import com.example.artem.exifdata.filelist.handler.FilesHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,7 +28,6 @@ public class DBUploadFileListHandler extends AsyncTask<String, Long, Boolean> im
 
     private DropboxAPI<?> mApi;
     private String mPath;
-    private List<String> mFileNames;
 
     private DropboxAPI.UploadRequest mRequest;
     private Context mContext;
@@ -42,7 +38,6 @@ public class DBUploadFileListHandler extends AsyncTask<String, Long, Boolean> im
     public DBUploadFileListHandler(Context context, DropboxAPI<?> api, String dropboxPath) {
         // We set the context this way so we don't accidentally leak activities
         mContext = context.getApplicationContext();
-
         mApi = api;
         mPath = dropboxPath;
     }
@@ -50,7 +45,7 @@ public class DBUploadFileListHandler extends AsyncTask<String, Long, Boolean> im
     @Override
     protected Boolean doInBackground(String... params) {
         boolean success = true;
-        for (String filename : mFileNames) {
+        for (String filename : params) {
             success &= sendFile(filename);
         }
         return success;
@@ -59,8 +54,8 @@ public class DBUploadFileListHandler extends AsyncTask<String, Long, Boolean> im
     @Override
     protected void onPostExecute(Boolean result) {
         if (result) {
-            Log.d(TAG, "files " + Arrays.toString(mFileNames.toArray()) + " uploaded successfully.");
-            showToast("Image successfully uploaded");
+            Log.d(TAG, "Files uploaded successfully.");
+            showToast("Files uploaded successfully.");
         } else {
             showToast(mErrorMsg);
         }
